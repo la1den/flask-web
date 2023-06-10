@@ -37,3 +37,4 @@ def for_statement():
             "author": "ShiNaian",
             "price": 99 }, ]
     return render_template("for.html",books=books)
+
