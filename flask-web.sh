@@ -36,6 +36,7 @@ main () {
         2)
             source venv/bin/activate
             python -m flask run --debug
+            exit 0
             ;;
         0)
             echo "Program terminated."

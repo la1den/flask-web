@@ -1,6 +1,19 @@
 from flask import Flask,render_template
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
 
 app = Flask(__name__)
+
+HOSTNAME = "localhost"
+PORT = 3306
+USERNAME = "lfh"
+PASSWORD = "123456"
+DATABASE = "database_learn"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}?charset=utf8"
+
+db = SQLAlchemy(app)
+
 
 @app.route('/')
 def index():
@@ -38,3 +51,13 @@ def for_statement():
             "price": 99 }, ]
     return render_template("for.html",books=books)
 
+
+
+@app.route("/mysql")
+def mysql_connect_test():
+
+    with db.engine.connect() as conn:
+        rs = conn.execute(text("select 1"))
+        print(rs.fetchone())
+
+    return "Mysql Connect testing..." 
