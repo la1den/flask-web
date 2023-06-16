@@ -53,7 +53,6 @@ def for_statement():
                  "price": 99 }, ]
     return render_template("for.html",books=books)
 
-
 class Userx(db.Model):
     __tablename__ = "user_x"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -64,3 +63,44 @@ class Userx(db.Model):
 
 with app.app_context():
     db.create_all()
+
+
+@app.route("/user/add")
+def add_user():
+    user = Userx(username="Zhang San", password="123123")
+    db.session.add(user)
+    db.session.commit()
+    return "Created successfully"
+
+@app.route("/user/query")
+def query_user():
+    user = Userx.query.get(1)
+    print(f"{user.id}: {user.username} - {user.password}")
+    users = Userx.query.filter_by(username="Zhang San")
+    print(type(users))
+    return "Data successfully searched"
+
+
+@app.route("/user/update")
+def update_user():
+    user = Userx.query.filter_by(username="Zhang San").first()
+    user.password = "123abc"
+    db.session.commit()
+    return "Successfully updated"
+
+
+@app.route("/user/delete")
+def delete_user():
+    user = Userx.query.filter_by(username="Zhang San").first()
+    db.session.delete(user)
+    db.session.commit()
+    return "Successfully deleted"
+
+class Article(db.Model):
+    __tablename__ = "article"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Test, nullable=False)
+
+    author_id = db.column(db.Integer, db.ForeignKey("user.id"))
+
