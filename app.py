@@ -1,5 +1,6 @@
 from flask import Flask,render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
@@ -12,6 +13,7 @@ DATABASE = "database_learn"
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DATABASE}?charset=utf8"
 
 db = SQLAlchemy(app)
+migrate = Migrate(app,db)
 # with app.app_context():
 #     with db.engine.connect() as conn:
 #         rs = conn.execute(text("select 1"))
@@ -61,8 +63,8 @@ class Userx(db.Model):
 
 # user = Userx(username="Zhang San", password="123123")
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 
 @app.route("/user/add")
@@ -100,7 +102,6 @@ class Article(db.Model):
     __tablename__ = "article"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Test, nullable=False)
+    content = db.Column(db.Text, nullable=False)
 
-    author_id = db.column(db.Integer, db.ForeignKey("user.id"))
 
