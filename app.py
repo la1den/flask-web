@@ -1,6 +1,8 @@
-from flask import Flask,render_template
+from flask import Flask, redirect,render_template, request, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+
+from forms import RegisterForm
 
 app = Flask(__name__)
 
@@ -104,4 +106,24 @@ class Article(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template("register.html")
+    else:
+        form = RegisterForm(request.form)
+        if form.validate():
+            email = form.email.data
+            username = form.username.data
+            password = form.password.data
+
+            print("email:", email)
+            print("username:", username)
+            print("password:", password)
+            return "注册成功"
+        else:
+            for errors in form.errors.values():
+                for error in errors:
+                    flash(error)
+            return redirect(url_for("register.html"))
 
